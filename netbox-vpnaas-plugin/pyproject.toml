@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netbox-vpnaas-plugin"
+version = "0.0.1"
+authors = [
+  { name="Andrej Hyben", email="andrej@hyben.net" },
+  { name = "Peter Rasev", email="peter.rasev@gmail.com "}
+]
+description = "Manage VPNaaS with Netbox & style."
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["netbox", "netbox-plugin", "vpnaas", "vpn"]
+dependencies = [
+    "Django>=4.2",
+]
+dynamic = ["readme"]
+
+[project.urls]
+"Homepage" = "https://github.com/ThaseG/netbox-vpnaas-plugin"
+"Bug Tracker" = "https://github.com/ThaseG/netbox-vpnaas-plugin/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["netbox_vpnaas*"]
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md"], content-type = "text/markdown"}

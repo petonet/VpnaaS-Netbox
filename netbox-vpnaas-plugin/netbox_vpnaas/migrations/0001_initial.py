@@ -1,0 +1,171 @@
+from django.db import migrations, models
+import django.db.models.deletion
+
+
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = []
+
+    operations = [
+        migrations.CreateModel(
+            name='DNS',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('ipv4', models.GenericIPAddressField(help_text='IPv4 DNS server address', protocol='IPv4')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'DNS Server',
+                'verbose_name_plural': 'DNS Servers',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='IPv4Routes',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('ipv4_routes', models.TextField(help_text='IPv4 routes, one per line in CIDR format (e.g., 10.10.10.10/32)')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'IPv4 Routes',
+                'verbose_name_plural': 'IPv4 Routes',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='IPv6Routes',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('ipv6_routes', models.TextField(help_text='IPv6 routes, one per line in CIDR format (e.g., ::/0)')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'IPv6 Routes',
+                'verbose_name_plural': 'IPv6 Routes',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='VPNaaSIPSecProfile',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('setup', models.TextField(help_text='IPSec configuration setup')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'IPSec Profile',
+                'verbose_name_plural': 'IPSec Profiles',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='TLSProfile',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('protocol', models.CharField(blank=True, max_length=10, help_text='Transport protocol')),
+                ('min_tls_version', models.CharField(blank=True, max_length=10, help_text='Minimum TLS version')),
+                ('max_tls_version', models.CharField(blank=True, max_length=10, help_text='Maximum TLS version')),
+                ('setup', models.TextField(help_text='TLS configuration setup')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'TLS Profile',
+                'verbose_name_plural': 'TLS Profiles',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Termination',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('type', models.CharField(max_length=20, help_text='Type of termination endpoint')),
+                ('device', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='dcim.device', help_text='Device for VPN termination')),
+                ('device_outside_interface', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vpnaas_termination_device_interface', to='dcim.interface', help_text='Outside interface on device')),
+                ('ipv4_vpn_ip_pool', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vpnaas_termination_ipv4', to='ipam.ipaddress')),
+                ('ipv6_vpn_ip_pool', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vpnaas_termination_ipv6', to='ipam.ipaddress')),
+                ('virtual_machine', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='virtualization.virtualmachine', help_text='Virtual machine for VPN termination')),
+                ('vm_outside_interface', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vpnaas_termination_vm_interface', to='virtualization.vminterface', help_text='Outside interface on virtual machine')),
+                ('vpn_gateway_ip', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vpnaas_termination_gateway', to='ipam.ipaddress', help_text='VPN gateway IP address')),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+            ],
+            options={
+                'verbose_name': 'VPN Termination',
+                'verbose_name_plural': 'VPN Terminations',
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
+            name='RemoteAccessTunnel',
+            fields=[
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                ('custom_field_data', models.JSONField(blank=True, default=dict)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=100)),
+                ('group', models.CharField(blank=True, max_length=100)),
+                ('server_certificate', models.TextField(help_text='Server certificate (multi-line)')),
+                ('technology', models.CharField(max_length=10, help_text='VPN technology type')),
+                ('status', models.CharField(max_length=10, help_text='Tunnel status')),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('comments', models.TextField(blank=True)),
+                ('contacts', models.ManyToManyField(blank=True, to='tenancy.contact')),
+                ('ipsec_profile', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='netbox_vpnaas.vpnaasipsecprofile', help_text='IPSec profile (required if technology is IPSec)')),
+                ('ipv4_routes_to_local_breakout', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_breakout_routes', to='netbox_vpnaas.ipv4routes', help_text='IPv4 routes for local breakout')),
+                ('ipv4_routes_to_vpn', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_vpn_routes', to='netbox_vpnaas.ipv4routes', help_text='IPv4 routes to VPN (defaults to all traffic)')),
+                ('ipv4_vpn_ip_pool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='vpnaas_tunnel_ipv4', to='ipam.ipaddress', help_text='IPv4 IP pool for VPN clients')),
+                ('ipv6_routes_to_local_breakout', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_breakout_routes_v6', to='netbox_vpnaas.ipv6routes', help_text='IPv6 routes for local breakout')),
+                ('ipv6_routes_to_vpn', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_vpn_routes_v6', to='netbox_vpnaas.ipv6routes', help_text='IPv6 routes to VPN')),
+                ('ipv6_vpn_ip_pool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='vpnaas_tunnel_ipv6', to='ipam.ipaddress', help_text='IPv6 IP pool for VPN clients')),
+                ('primary_dns', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_primary', to='netbox_vpnaas.dns', help_text='Primary DNS server (defaults to 1.1.1.1)')),
+                ('secondary_dns', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tunnels_secondary', to='netbox_vpnaas.dns', help_text='Secondary DNS server (defaults to 8.8.8.8)')),
+                ('tags', models.ManyToManyField(blank=True, to='extras.tag')),
+                ('tenant', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='tenancy.tenant')),
+                ('terminations', models.ManyToManyField(blank=True, to='netbox_vpnaas.termination', help_text='VPN termination points')),
+                ('tls_profile', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='netbox_vpnaas.tlsprofile', help_text='TLS profile (required if technology is TLS)')),
+            ],
+            options={
+                'verbose_name': 'Remote Access VPN Tunnel',
+                'verbose_name_plural': 'Remote Access VPN Tunnels',
+                'ordering': ['name'],
+            },
+        ),
+    ]

@@ -1,0 +1,11 @@
+FROM docker.io/netboxcommunity/netbox:v4.4-3.4.1
+
+# Skopíruj CELÝ plugin adresár
+COPY ./netbox-vpnaas-plugin /opt/netbox/netbox-vpnaas-plugin
+
+# Nastav ENV pre virtual environment
+ENV VIRTUAL_ENV=/opt/netbox/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Nainštaluj plugin
+RUN /usr/local/bin/uv pip install /opt/netbox/netbox-vpnaas-plugin
