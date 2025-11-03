@@ -29,7 +29,7 @@ jobs:
         echo "SUPERUSER_API_TOKEN="
         echo "SUPERUSER_EMAIL="
         echo "SUPERUSER_NAME=${{ vars.ROOT_USER }}" >> env/netbox.env
-        echo "SUPERUSER_PASSWORD=${{ vars.ROOT_PASSWORD }}" >> env/netbox.env
+        echo "SUPERUSER_PASSWORD=${{ secrets.ROOT_PASSWORD }}" >> env/netbox.env
 
         echo "POSTGRES_DB=${{ vars.DB_NAME }}" >> env/postgres.env
         echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env/postgres.env
