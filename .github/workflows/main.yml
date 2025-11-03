@@ -8,7 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    
+    environment: test-env
+
     steps:
     - name: Code checkout
       uses: actions/checkout@v4
@@ -31,6 +32,10 @@ jobs:
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/redis-cache.env
 
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/redis.env
+
+        echo "DEBUG: SECRET_KEY length = $(wc -c < env/netbox.env | grep SECRET_KEY | cut -d'=' -f2 | wc -c)"
+        echo "DEBUG: netbox.env contents (SECRET_KEY masked):"
+        grep -v "SECRET_KEY\|PASSWORD" env/netbox.env || true
 
     
     - name: Stop and delete old containers
