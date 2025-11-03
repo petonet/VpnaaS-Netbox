@@ -25,6 +25,12 @@ jobs:
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/netbox.env
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> env/netbox.env
 
+        echo "SKIP_SUPERUSER= false"
+        echo "SUPERUSER_API_TOKEN="
+        echo "SUPERUSER_EMAIL="
+        echo "SUPERUSER_NAME=${{ vars.ROOT_USER }}" >> env/netbox.env
+        echo "SUPERUSER_PASSWORD=${{ vars.ROOT_PASSWORD }}" >> env/netbox.env
+
         echo "POSTGRES_DB=${{ vars.DB_NAME }}" >> env/postgres.env
         echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env/postgres.env
         echo "POSTGRES_USER=${{ vars.DB_USER }}" >> env/postgres.env
@@ -50,7 +56,7 @@ jobs:
       run: docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
     
     - name: Wait for initialization
-      run: sleep 60
+      run: sleep 240
     
     - name: Health check
       run: |
