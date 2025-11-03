@@ -25,7 +25,7 @@ jobs:
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/netbox.env
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> env/netbox.env
 
-        echo "SKIP_SUPERUSER= false" >>env/netbox.env
+        echo "SKIP_SUPERUSER= False" >>env/netbox.env
         echo "SUPERUSER_API_TOKEN=" >> env/netbox.env
         echo "SUPERUSER_EMAIL=" >> env/netbox.env
         echo "SUPERUSER_NAME=${{ vars.SUPERUSER_NAME }}" >> env/netbox.env
@@ -42,7 +42,7 @@ jobs:
     
     - name: Stop and delete old containers
       run: |
-        docker compose -f docker-compose.yml -f docker-compose.override.yml down --volumes --remove-orphans
+        docker compose -f docker-compose.yml -f docker-compose.override.yml down --remove-orphans
       continue-on-error: true
     
     - name: Cleanup old images
@@ -56,7 +56,9 @@ jobs:
       run: docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
     
     - name: Wait for initialization
-      run: sleep 240
+      run: |
+        echo "Waiting for NetBox to be healthy..."
+        timeout 180 bash -c 'until docker compose -f docker-compose.yml -f docker-compose.override.yml ps | grep netbox | grep -q "healthy"; do sleep 5; done' || echo "Timeout waiting for healthy status"
     
     - name: Health check
       run: |
