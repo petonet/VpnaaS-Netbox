@@ -12,9 +12,9 @@ services:
     user: "unit:root"
     healthcheck:
       test: curl -f http://localhost:8080/login/ || exit 1
-      start_period: 90s
+      start_period: 240s
       timeout: 3s
-      interval: 15s
+      interval: 30s
     volumes:
       - ./configuration:/etc/netbox/config:z,ro
       - netbox-media-files:/opt/netbox/netbox/media:rw
