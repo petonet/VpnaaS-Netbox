@@ -57,5 +57,5 @@ jobs:
     
     - name: Connection test
       run: |
-        curl -f http://localhost:8000/health || echo "Health check failed"
+        curl -f http://localhost:8080/health || echo "Health check failed"
       continue-on-error: true
