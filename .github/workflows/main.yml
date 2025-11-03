@@ -15,21 +15,22 @@ jobs:
     
     - name: Create .env files
       run: |
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> netbox.env
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> netbox.env
-        echo "DB_USER=${{ secrets.DB_USER }}" >> netbox.env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> netbox.env
-        echo "REDIS_CACHE_PASSWORD=${{ secrets.REDIS_CACHE_PASSWORD }}" >> netbox.env
-        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> netbox.env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> netbox.env
-        
-        echo "POSTGRES_DB=${{ secrets.DB_NAME }}" >> postgres.env
-        echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> postgres.env
-        echo "POSTGRES_USER=${{ secrets.DB_USER }}" >> postgres.env
+        mkdir -p env
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> env/netbox.env
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> env/netbox.env
+        echo "DB_USER=${{ secrets.DB_USER }}" >> env/netbox.env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env/netbox.env
+        echo "REDIS_CACHE_PASSWORD=${{ secrets.REDIS_CACHE_PASSWORD }}" >> env/netbox.env
+        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/netbox.env
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> env/netbox.env
 
-        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> redis-cache.env
-        
-        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> redis.env
+        echo "POSTGRES_DB=${{ secrets.DB_NAME }}" >> env/postgres.env
+        echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env/postgres.env
+        echo "POSTGRES_USER=${{ secrets.DB_USER }}" >> env/postgres.env
+
+        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/redis-cache.env
+
+        echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> env/redis.env
 
     
     - name: Stop and delete old containers
