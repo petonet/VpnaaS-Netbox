@@ -34,7 +34,7 @@ jobs:
     
     - name: Stop and delete old containers
       run: |
-        docker compose down --volumes --remove-orphans
+        docker compose -f docker-compose.yml -f docker-compose.override.yml down --volumes --remove-orphans
       continue-on-error: true
     
     - name: Cleanup old images
@@ -42,20 +42,20 @@ jobs:
       continue-on-error: true
     
     - name: Build containers
-      run: docker compose build --no-cache
-    
+      run: docker compose -f docker-compose.yml -f docker-compose.override.yml build --no-cache
+
     - name: Run containers
-      run: docker compose up -d
+      run: docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
     
     - name: Wait for initialization
       run: sleep 15
     
     - name: Health check
       run: |
-        docker compose ps
-        docker compose logs --tail=100
+        docker compose -f docker-compose.yml -f docker-compose.override.yml ps
+        docker compose -f docker-compose.yml -f docker-compose.override.yml logs --tail=100
     
     - name: Connection test
       run: |
-        curl -f http://localhost:8080/health || echo "Health check failed"
+        curl -f http://localhost:8000/health || echo "Health check failed"
       continue-on-error: true
